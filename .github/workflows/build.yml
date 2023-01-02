@@ -26,6 +26,6 @@ jobs:
         with:
           branch: update
           skip_checkout: true
-          file_pattern: coocaa.m3u8 vthanh.m3u8
+          file_pattern: "*.m3u8"
           commit_message: UPdate daily
           push_options: '--force'
