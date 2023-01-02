@@ -3,6 +3,8 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
+  schedule:
+    - cron: "0 16 * * *"
   
 jobs:
   run:
