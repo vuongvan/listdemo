@@ -27,4 +27,5 @@ jobs:
           branch: update
           skip_checkout: true
           file_pattern: coocaa.m3u8 vthanh.m3u8
-          commit_message: Bump version ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          commit_message: UPdate daily
+          push_options: '--force'
