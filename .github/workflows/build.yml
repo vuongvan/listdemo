@@ -28,6 +28,6 @@ jobs:
         with:
           branch: update
           skip_checkout: true
-          file_pattern: "*.m3u8", *.gz
+          file_pattern: *.gz *.m3u8
           commit_message: UPdate daily
           push_options: '--force'
