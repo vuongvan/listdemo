@@ -23,6 +23,18 @@ jobs:
         run: |
           chmod +x ./run.sh
           ./run.sh
+
+      - name: Upload modules to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          body: "ReVanced"
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: *.gz
+          release_name: EPG
+          tag: 0.0.1
+          file_glob: true
+          overwrite: true
+
       - name: Switch to update branch
         run: git checkout -f update || git switch --discard-changes --orphan update
 
