@@ -30,6 +30,6 @@ jobs:
         with:
           branch: update
           skip_checkout: true
-          file_pattern: epg.xml.gz
+          file_pattern: "*.gz"
           commit_message: Update epg.xml.gz
           push_options: '--force'
