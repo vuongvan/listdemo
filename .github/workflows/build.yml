@@ -1,4 +1,4 @@
-name: Build Modules
+name: Update EPG
 on: 
   workflow_call:
   workflow_dispatch:
@@ -51,6 +51,6 @@ jobs:
         with:
           token: ${{ github.token }}
           repository: ${{ github.repository }}
-          retain_days: 2
+          retain_days: 1
           keep_minimum_runs: 0
           
