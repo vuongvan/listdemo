@@ -1,3 +1,2 @@
 #!/bin/sh -e
-curl https://trada.info/epg.xml --output epg.xml
-gzip epg.xml
+wget -q https://lichphatsong.xyz/schedule/epg.xml.gz -O epg.xml.gz
