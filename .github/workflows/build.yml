@@ -29,7 +29,7 @@ jobs:
         with:
           body: "ReVanced"
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: tv.data ./*.gz
+          file: tv.data epg.xml.gz
           release_name: EPG
           tag: 0.0.1
           file_glob: true
@@ -42,7 +42,7 @@ jobs:
         with:
           branch: update
           skip_checkout: true
-          file_pattern: ./*.gz
+          file_pattern: tv.data epg.xml.gz
           commit_message: Update epg.xml.gz
           push_options: '--force'
           
