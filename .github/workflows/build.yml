@@ -1,10 +1,10 @@
-name: Update EPG
+name: Build Modules
 on: 
   workflow_call:
   workflow_dispatch:
   push:
   schedule:
-    - cron: "0 8,20 * * *"
+    - cron: "0 16 * * *"
   
 jobs:
   run:
@@ -23,34 +23,11 @@ jobs:
         run: |
           chmod +x ./run.sh
           ./run.sh
-
-      - name: Upload modules to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          body: "ReVanced"
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: tv.data epg.xml.gz
-          release_name: EPG
-          tag: 0.0.1
-          file_glob: true
-          overwrite: true
-
-      - name: Switch to update branch
-        run: git checkout -f update || git switch --discard-changes --orphan update
-
+      
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           branch: update
           skip_checkout: true
-          file_pattern: tv.data epg.xml.gz
-          commit_message: Update epg.xml.gz
+          file_pattern: "*.m3u8"
+          commit_message: UPdate daily
           push_options: '--force'
-          
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 1
-          keep_minimum_runs: 0
-          
