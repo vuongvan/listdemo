@@ -39,7 +39,7 @@ jobs:
         with:
           branch: update
           skip_checkout: true
-          file_pattern: epg.xml.gz *.m3u
+          file_pattern: epg.xml.gz
           commit_message: UPdate daily
           push_options: '--force'
 
