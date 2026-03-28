@@ -1,0 +1,36 @@
+name: Generate IPTV Playlist
+
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Nhập Slug phim (ví dụ: truc-ngoc)'
+        required: true
+        default: 'truc-ngoc'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run script
+        run: python generate_m3u.py ${{ github.event.inputs.slug }}
+
+      - name: Commit and Push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add *.m3u
+          git commit -m "Update playlist for ${{ github.event.inputs.slug }}" || exit 0
+          git push
+          
