@@ -1,0 +1,56 @@
+name: Sync IPTV Playlists to Update Branch
+
+on:
+  schedule:
+    # 16:00 Việt Nam = 09:00 UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Cho phép bấm nút chạy tay để kiểm tra ngay
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Main Branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Generate M3U files
+        run: python process_slugs.py
+
+      - name: Deploy to Update Branch
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Tạo một thư mục tạm để chứa các file m3u
+          mkdir temp_m3u
+          mv *.m3u temp_m3u/
+          
+          # Chuyển sang nhánh update (tạo mới nếu chưa có)
+          git fetch origin
+          git checkout update || git checkout -b update
+          
+          # Xóa các file m3u cũ trên nhánh update để cập nhật mới hoàn toàn
+          rm -f *.m3u
+          
+          # Chép các file mới từ thư mục tạm ra ngoài
+          mv temp_m3u/*.m3u .
+          rmdir temp_m3u
+          
+          # Commit và push lên nhánh update
+          git add *.m3u
+          git commit -m "Auto-update playlists: $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
+          git push origin update
+          
