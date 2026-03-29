@@ -1,3 +1,2 @@
 default:truc-ngoc
-tay-du-ky
-co-manh-luc
+ban-trai-theo-yeu-cau
