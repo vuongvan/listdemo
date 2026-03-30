@@ -1,2 +1,2 @@
-default:truc-ngoc
+default:khanh-khanh-nhat-thuong-tan-xuyen-nhat-thuong
 ban-trai-theo-yeu-cau
