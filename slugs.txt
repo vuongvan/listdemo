@@ -1,2 +1,1 @@
-default:khanh-khanh-nhat-thuong-tan-xuyen-nhat-thuong
-ban-trai-theo-yeu-cau
+default:giai-ngau-thien-thanh
