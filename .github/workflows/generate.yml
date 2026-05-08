@@ -1,0 +1,53 @@
+name: Update Playlists to List Branch
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'slugs.txt' # Tự chạy khi bạn sửa file slugs.txt
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Main Branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: Run Generator
+        run: python gen_playlist.py
+
+      - name: Deploy to List Branch
+        run: |
+          # Cấu hình git
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Lưu tạm nội dung thư mục output vào bộ nhớ đệm của runner
+          mkdir -p /tmp/m3u_files
+          cp output/*.m3u /tmp/m3u_files/
+          
+          # Chuyển sang nhánh list (nếu chưa có thì tạo mới)
+          git fetch origin
+          git checkout list || git checkout --orphan list
+          
+          # Xóa bỏ các file cũ trên nhánh list để cập nhật mới hoàn toàn
+          git rm -rf . || true
+          
+          # Copy các file mới vào
+          cp /tmp/m3u_files/*.m3u .
+          
+          # Commit và Push
+          git add .
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update playlists $(date)" && git push origin list --force)
