@@ -3,6 +3,9 @@ import os
 
 def get_m3u_content(slug):
     url = f"https://ophim1.com/v1/api/phim/{slug}"
+    # Base URL dành cho ảnh của OPhim
+    IMG_BASE_URL = "https://img.ophim.live/uploads/movies/"
+    
     try:
         res = requests.get(url, timeout=10)
         res.raise_for_status()
@@ -10,7 +13,10 @@ def get_m3u_content(slug):
         item = data.get('item', {})
         if not item: return None
 
-        movie_name = item.get('name', 'Movie')
+        # Lấy link ảnh (Ưu tiên poster_url, không có thì lấy thumb_url)
+        poster_name = item.get('poster_url') or item.get('thumb_url')
+        image_url = f"{IMG_BASE_URL}{poster_name}" if poster_name else ""
+        
         episodes_list = item.get('episodes', [])
 
         # Chọn server: Ưu tiên Thuyết minh/Lồng tiếng
@@ -31,8 +37,14 @@ def get_m3u_content(slug):
         # Tạo nội dung M3U
         lines = ["#EXTM3U"]
         for ep in selected_server.get('server_data', []):
-            lines.append(f"#EXTINF:-1, {movie_name} - Tập {ep.get('name')}")
-            lines.append(ep.get('link_m3u8'))
+            ep_name = ep.get('name')
+            link = ep.get('link_m3u8')
+            
+            if link:
+                # Thêm tvg-logo để hiện ảnh, chỉ để "Tập X" ở phần tên
+                # Cấu trúc: #EXTINF:-1 tvg-logo="LINK_ANH",Tập X
+                lines.append(f'#EXTINF:-1 tvg-logo="{image_url}", Tập {ep_name}')
+                lines.append(link)
         
         return "\n".join(lines)
     except Exception as e:
@@ -44,7 +56,6 @@ def main():
         print("Không tìm thấy file slugs.txt")
         return
 
-    # Tạo thư mục đầu ra để chứa các file m3u
     os.makedirs("output", exist_ok=True)
 
     with open('slugs.txt', 'r', encoding='utf-8') as f:
@@ -70,3 +81,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
