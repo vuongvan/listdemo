@@ -1,0 +1,41 @@
+name: Sort M3U
+
+on:
+  schedule:
+    - cron: "0 * * * *"        # mỗi giờ (chỉ chạy trên default branch)
+  workflow_dispatch:            # chạy tay, chọn branch tùy ý
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sort-m3u-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  sort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Lấy new.m3u và sắp xếp
+        env:
+          SOURCE_URL: https://raw.githubusercontent.com/vietng228/m3u/main/new.m3u
+          OUTPUT_FILE: sorted.m3u
+        run: python sort_m3u.py
+
+      - name: Commit & push nếu có thay đổi
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add sorted.m3u
+          if git diff --cached --quiet; then
+            echo "Không có thay đổi."
+          else
+            git commit -m "chore: update sorted.m3u"
+            git push origin HEAD
+          fi
