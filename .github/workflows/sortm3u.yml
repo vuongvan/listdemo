@@ -27,7 +27,7 @@ jobs:
 
       - name: Lấy new.m3u và sắp xếp
         env:
-          SOURCE_URL: https://raw.githubusercontent.com/${{ github.repository }}/${{ github.ref_name }}/new.m3u
+          SOURCE_URL: https://raw.githubusercontent.com/vietng228/m3u/new.m3u
           OUTPUT_FILE: sorted.m3u
         run: python sort_m3u.py
 
