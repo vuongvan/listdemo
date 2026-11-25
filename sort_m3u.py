@@ -19,6 +19,7 @@ PRIORITY = [
     {"thvl2", "vinhlong2", "thvinhlong2"},
     {"thvl3", "vinhlong3", "thvinhlong3"},
     {"thvl4", "vinhlong4", "thvinhlong4"},
+    {"thvl5", "vinhlong5", "thvinhlong5"},
 ]
 
 
